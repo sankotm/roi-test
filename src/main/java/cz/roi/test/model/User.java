@@ -1,14 +1,17 @@
 package cz.roi.test.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Set;
 
+@Data
 @Entity
-@Table(name = "user")
-//@EntityListeners(AuditingEntityListener.class)
-//@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
+@Table(name = "fb_user")
 public class User implements Serializable {
 
         @Id
@@ -24,16 +27,8 @@ public class User implements Serializable {
         @Column(name = "profile_picture_url")
         private String profilePictureUrl;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private Set<Photo> photos;
 
-//        @Column(nullable = false, updatable = false)
-//        @Temporal(TemporalType.TIMESTAMP)
-//        @CreatedDate
-//        private Date createdAt;
-//
-//        @Column(nullable = false)
-//        @Temporal(TemporalType.TIMESTAMP)
-//        @LastModifiedDate
-//        private Date updatedAt;
 }

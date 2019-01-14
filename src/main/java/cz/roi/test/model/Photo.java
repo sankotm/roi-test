@@ -1,9 +1,14 @@
 package cz.roi.test.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
+@Data
 @Entity
 @Table(name = "photo")
 public class Photo implements Serializable {
@@ -12,6 +17,7 @@ public class Photo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
