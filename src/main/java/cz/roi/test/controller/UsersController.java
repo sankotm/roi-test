@@ -34,8 +34,12 @@ public class UsersController {
     //DELETE /users/{user_fb_id} - deletes the user and his photos from application DB (don’t delete photos on Facebook)
     @DeleteMapping("/{id}")
     public GenericResponse deleteUser(@PathVariable(value = "id") String fbId) {
-        // todo delete user and his photos
-        return new GenericResponse(true, null, "TODO delete user [" + fbId + "] information");
+        User user = userRepository.findById(fbId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "fbId", fbId));
+
+        // photos are cascaded on DB level so they will get deleted together with user
+        userRepository.delete(user);
+        return new GenericResponse(true, null, "User [" + fbId + "] deleted");
     }
 
     //GET /users/{user_fb_id} - responding with the user details (FB ID, name, gender, profile picture URL)
