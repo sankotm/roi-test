@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -29,11 +30,10 @@ public class UsersController {
 
     // POST /users - request body containing JSON with user FB ID and access token
     @PostMapping
-    public GenericResponse getUserInfos(@Valid @RequestBody FbDownloadRq fbDownloadRq) {
+    public GenericResponse getUserInfos(@Valid @RequestBody FbDownloadRq fbDownloadRq) throws UnsupportedEncodingException {
         // todo return reasonalbel thing
-        userService.getUserInfo(fbDownloadRq.fbId, fbDownloadRq.accessToken);
-
-        return new GenericResponse(true, null, "All good");
+        String userId = userService.getUserInfo(fbDownloadRq.fbId, fbDownloadRq.accessToken);
+        return new GenericResponse(true, null, "All good. User ID: " + userId);
     }
 
     //DELETE /users/{user_fb_id} - deletes the user and his photos from application DB (don’t delete photos on Facebook)
@@ -58,6 +58,7 @@ public class UsersController {
     //GET /users/{user_fb_id}/photos - responding with list of photos (each with: URL on FB, URL of image file, album name (if any), numbers of reactions grouped by type); can optionally support sorting too (for example by sum of reactions)
     @GetMapping("/{id}/photos")
     public List<Photo> getUserPhotos(@PathVariable(value = "id") String fbId) {
+        // todo return empty array where photos not found
         return photoRepository.findAllByUserId(fbId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "fbId", fbId));
     }
