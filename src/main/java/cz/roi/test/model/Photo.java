@@ -14,7 +14,6 @@ import java.io.Serializable;
 public class Photo implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @JsonIgnore

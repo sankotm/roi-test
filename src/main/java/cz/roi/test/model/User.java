@@ -15,7 +15,6 @@ import java.util.Set;
 public class User implements Serializable {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private String id;
 
         @NotBlank

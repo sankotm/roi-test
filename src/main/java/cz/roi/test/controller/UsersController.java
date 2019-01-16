@@ -7,6 +7,7 @@ import cz.roi.test.model.Photo;
 import cz.roi.test.model.User;
 import cz.roi.test.repository.PhotoRepository;
 import cz.roi.test.repository.UserRepository;
+import cz.roi.test.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +24,16 @@ public class UsersController {
     @Autowired
     PhotoRepository photoRepository;
 
+    @Autowired
+    UserService userService;
+
     // POST /users - request body containing JSON with user FB ID and access token
     @PostMapping
     public GenericResponse getUserInfos(@Valid @RequestBody FbDownloadRq fbDownloadRq) {
-        // todo get infos
-        System.out.println(fbDownloadRq);
-        return new GenericResponse(true, null, "TODO get user information from FB");
+        // todo return reasonalbel thing
+        userService.getUserInfo(fbDownloadRq.fbId, fbDownloadRq.accessToken);
+
+        return new GenericResponse(true, null, "All good");
     }
 
     //DELETE /users/{user_fb_id} - deletes the user and his photos from application DB (don’t delete photos on Facebook)
