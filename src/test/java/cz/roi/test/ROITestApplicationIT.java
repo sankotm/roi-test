@@ -17,10 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -84,10 +86,12 @@ public class ROITestApplicationIT {
         System.out.println(response.getBody());
 
         Map responseMap = new Gson().fromJson(response.getBody(), Map.class);
-        assertThat(responseMap.get("id"), equalTo(user.getId()));
-        assertThat(responseMap.get("name"), equalTo(user.getName()));
-        assertThat(responseMap.get("gender"), equalTo(user.getGender()));
-        assertThat(responseMap.get("profilePictureUrl"), equalTo(user.getProfilePictureUrl()));
+        Map data = (Map)responseMap.get("data");
+        assertThat(data, notNullValue());
+        assertThat(data.get("id"), equalTo(user.getId()));
+        assertThat(data.get("name"), equalTo(user.getName()));
+        assertThat(data.get("gender"), equalTo(user.getGender()));
+        assertThat(data.get("profilePictureUrl"), equalTo(user.getProfilePictureUrl()));
     }
 
     /**
@@ -116,7 +120,11 @@ public class ROITestApplicationIT {
 
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + USER_ID + "/photos", String.class);
         assertThat("Response code is not 200", response.getStatusCodeValue() == 200);
-        assertThat(response.getBody(), equalTo("[]"));
+
+        Map responseMap = new Gson().fromJson(response.getBody(), Map.class);
+        List data = (List)responseMap.get("data");
+        assertThat(data, notNullValue());
+        assertThat(data.size(), equalTo(0));
     }
 
     /**
@@ -147,15 +155,18 @@ public class ROITestApplicationIT {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "/" + USER_ID + "/photos", String.class);
         assertThat("Response code is not 200", response.getStatusCodeValue() == 200);
 
-        List responseList = new Gson().fromJson(response.getBody(), List.class);
-        assertThat(responseList.size(), equalTo(2));
-        Map photo1resp = (Map) responseList.get(0);
+        Map responseMap = new Gson().fromJson(response.getBody(), Map.class);
+        List data = (List)responseMap.get("data");
+        assertThat(data, notNullValue());
+        assertThat(data.size(), equalTo(2));
+
+        Map photo1resp = (Map) data.get(0);
         assertThat(photo1resp.get("id"), equalTo(photo1.getId()));
         assertThat(photo1resp.get("fbUrl"), equalTo(photo1.getFbUrl()));
         assertThat(photo1resp.get("imageUrl"), equalTo(photo1.getImageUrl()));
         assertThat(photo1resp.get("albumName"), equalTo(photo1.getAlbumName()));
 
-        Map photo2resp = (Map) responseList.get(1);
+        Map photo2resp = (Map) data.get(1);
         assertThat(photo2resp.get("id"), equalTo(photo2.getId()));
         assertThat(photo2resp.get("fbUrl"), equalTo(photo2.getFbUrl()));
         assertThat(photo2resp.get("imageUrl"), equalTo(photo2.getImageUrl()));

@@ -3,7 +3,6 @@ package cz.roi.test.controller;
 import cz.roi.test.dto.FbDownloadRq;
 import cz.roi.test.dto.GenericResponse;
 import cz.roi.test.exception.ResourceNotFoundException;
-import cz.roi.test.model.Photo;
 import cz.roi.test.model.User;
 import cz.roi.test.repository.PhotoRepository;
 import cz.roi.test.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Endpoint to work with user and photo information
@@ -69,9 +67,10 @@ public class UsersController {
      * @return
      */
     @GetMapping("/{id}")
-    public User getUser(@PathVariable(value = "id") String fbId) {
-        return userRepository.findById(fbId)
+    public GenericResponse getUser(@PathVariable(value = "id") String fbId) {
+        User user = userRepository.findById(fbId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "fbId", fbId));
+        return new GenericResponse(user);
     }
 
 
@@ -82,11 +81,11 @@ public class UsersController {
      * @return
      */
     @GetMapping("/{id}/photos")
-    public List<Photo> getUserPhotos(@PathVariable(value = "id") String fbId) {
+    public GenericResponse getUserPhotos(@PathVariable(value = "id") String fbId) {
         // lookup user separately, so that exception is thrown when user does not exist
         userRepository.findById(fbId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "fbId", fbId));
-        return photoRepository.findAllByUserId(fbId).orElse(new ArrayList<>());
+        return new GenericResponse(photoRepository.findAllByUserId(fbId).orElse(new ArrayList<>()));
     }
 
 }
