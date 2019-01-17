@@ -1,13 +1,13 @@
 package cz.roi.test.dto;
 
+import org.springframework.http.HttpStatus;
+
 public class GenericResponse {
-    public Boolean success;
-    public String error; // todo enum
+    public int status;
     public String message;
 
-    public GenericResponse(Boolean success, String error, String message) {
-        this.success = success;
-        this.error = error;
+    public GenericResponse(HttpStatus statusCode, String message) {
+        this.status = statusCode.value();
         this.message = message;
     }
 }

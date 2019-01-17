@@ -3,6 +3,7 @@ package cz.roi.test.service;
 import com.google.gson.Gson;
 import cz.roi.test.dto.PaginatedResult;
 import cz.roi.test.dto.UserInfo;
+import cz.roi.test.exception.CommunicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,40 +32,37 @@ public class FacebookFetcher {
                 .get();
 
         Integer status = response.getStatus();
-        String body = response.readEntity(String.class);
-
-        logger.debug(body)
-        ;
-        // todo handle error states - throw exceptions
         if (status != 200) {
-            logger.error("Call failed: [" + status + "] " + body);
-            return null;
+            throw new CommunicationException(status, "Error during fetching of user information", response.readEntity(String.class));
         }
+
+        String body = response.readEntity(String.class);
+        logger.debug(body);
         return new Gson().fromJson(body, UserInfo.class);
     }
 
     public PaginatedResult getPaginatedResult(String fbId, String accessToken) throws UnsupportedEncodingException {
         return getPaginatedResult(FB_API_URL + "/" + fbId + "/photos"
                 + "?type=tagged"
-                + "&fields="+URLEncoder.encode("id,name,link,album{name},images.limit(1)", "UTF-8") // {name} is taken as template token by Jersey client
+                + "&fields=" + URLEncoder.encode("id,name,link,album{name},images.limit(1)", "UTF-8") // {name} is taken as template token by Jersey client
                 + "&access_token=" + accessToken);
     }
 
-    public PaginatedResult getPaginatedResult(String url) throws UnsupportedEncodingException {
+    public PaginatedResult getPaginatedResult(String url) {
         Client client = ClientBuilder.newClient();
         Response response = client.target(url)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
         Integer status = response.getStatus();
-        String body = response.readEntity(String.class);
 
-        logger.info(body);
-        // todo handle error states - throw exceptions
         if (status != 200) {
-            logger.error("Call failed: [" + status + "] " + body);
-            return null;
+            throw new CommunicationException(status, "Error during fetching of facebook information", response.readEntity(String.class));
         }
+
+        String body = response.readEntity(String.class);
+        logger.info(body);
+
         return new Gson().fromJson(body, PaginatedResult.class);
     }
 }

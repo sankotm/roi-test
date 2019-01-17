@@ -9,6 +9,7 @@ import cz.roi.test.repository.PhotoRepository;
 import cz.roi.test.repository.UserRepository;
 import cz.roi.test.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,7 +40,7 @@ public class UsersController {
     @PostMapping
     public GenericResponse getUserInfos(@Valid @RequestBody FbDownloadRq fbDownloadRq) throws UnsupportedEncodingException {
         String userId = userService.getUserInfo(fbDownloadRq.fbId, fbDownloadRq.accessToken);
-        return new GenericResponse(true, null, "All good. User ID: " + userId);
+        return new GenericResponse(HttpStatus.OK, "All good. User ID: " + userId);
     }
 
     /**
@@ -55,7 +56,7 @@ public class UsersController {
 
         // photos are cascaded on DB level so they will get deleted together with user
         userRepository.delete(user);
-        return new GenericResponse(true, null, "User [" + fbId + "] deleted");
+        return new GenericResponse(HttpStatus.OK, "User [" + fbId + "] deleted");
     }
 
     /**
