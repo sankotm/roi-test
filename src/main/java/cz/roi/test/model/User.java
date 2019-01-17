@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * User entity
+ */
 @Data
 @Entity
 @Table(name = "fb_user")

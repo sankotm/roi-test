@@ -3,6 +3,9 @@ package cz.roi.test.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Photo DTO
+ */
 public class PhotoInfo {
 
     /*

@@ -3,6 +3,9 @@ package cz.roi.test.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * General error
+ */
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 public class CommunicationException extends RuntimeException {
     private Integer statusCode;

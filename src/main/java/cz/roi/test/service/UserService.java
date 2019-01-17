@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+/**
+ * Service handling getting of user and photo information from facebook
+ */
 @Service
 public class UserService {
 

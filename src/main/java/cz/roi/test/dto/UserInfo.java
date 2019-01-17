@@ -1,5 +1,8 @@
 package cz.roi.test.dto;
 
+/**
+ * User DTO
+ */
 public class UserInfo {
     public String id;
     public String name;

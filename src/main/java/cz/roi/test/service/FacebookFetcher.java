@@ -15,6 +15,9 @@ import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * Service to get information from Facebook
+ */
 @Service
 public class FacebookFetcher {
 
@@ -55,14 +58,12 @@ public class FacebookFetcher {
                 .get();
 
         Integer status = response.getStatus();
-
         if (status != 200) {
             throw new CommunicationException(status, "Error during fetching of facebook information", response.readEntity(String.class));
         }
 
         String body = response.readEntity(String.class);
         logger.info(body);
-
         return new Gson().fromJson(body, PaginatedResult.class);
     }
 }

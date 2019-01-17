@@ -17,6 +17,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Endpoint to work with user and photo information
+ */
 @RestController
 @RequestMapping("/users")
 public class UsersController {

@@ -1,7 +1,6 @@
 package cz.roi.test.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +9,9 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Photo entity
+ */
 @Data
 @Entity
 @Table(name = "photo")
@@ -36,7 +38,7 @@ public class Photo implements Serializable {
     private String albumName;
 
     @Column(name = "reactions_summary")
-    private String reactionsSummary;
+    private String reactionsSummary; // it's not clear how reactions should be handled, so for now it's left as generic string
 
     public Photo(String id) {
         this.id = id;
